@@ -4,7 +4,7 @@ import sys
 root =  os.path.dirname(os.path.abspath(__file__).replace('\\', '/'))
 
 # 모듈 경로 추가
-package_path = ['/weather', '/weather/module', '/weather/module/data', '/weather/zest', '/weather/zest/data']
+package_path = ['/weather', '/weather/module', '/weather/data', '/weather/preprocessing']
 for p in package_path:
     full_path = root + p
     if full_path not in sys.path:
@@ -24,12 +24,12 @@ path = {
     "nc_snowfall_pattern": "/data/original/weather_nc/snowfall/Snowf_*.nc",
 
     # 가공된 파일 저장 경로
-    "cleaned_country": "/data/cleaned/country.csv",
-    "cleaned_state": "/data/cleaned/state.csv",
-    "cleaned_city": "/data/cleaned/city.csv",
-    "cleaned_weather": "/data/cleaned/weather.csv",
-    "cleaned_last_fm": "/data/cleaned/last_fm.csv",
-    "cleaned_genre_streams_by_country": "/data/cleaned/genre_streams_by_country.csv",
+    "country": "/data/cleaned/country.csv",
+    "state": "/data/cleaned/state.csv",
+    "city": "/data/cleaned/city.csv",
+    "weather": "/data/cleaned/weather.csv",
+    "last_fm": "/data/cleaned/last_fm.csv",
+    "genre_streams_by_country": "/data/cleaned/genre_streams_by_country.csv",
 
     # 지리 Natural Earth 데이터 파일
     "natural_country": "/data/original/geo_natural_earth/country/country.shp",
