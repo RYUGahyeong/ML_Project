@@ -37,12 +37,12 @@ class weather:
         csv_df = self.csv_data().groupby(['DATE', 'TIME_GROUP', 'CITY'], as_index=False).mean().reset_index(drop=True)
         h5_df = self.h5_data().groupby(['DATE', 'TIME_GROUP', 'CITY'], as_index=False).mean().reset_index(drop=True)
 
-        merged = pd.merge(csv_df, h5_df, on=['DATE', 'TIME_GROUP', 'CITY'], how='inner', validate="one_to_one")
+        merged = pd.merge(csv_df, h5_df, on=['DATE', 'TIME_GROUP', 'CITY'], how='outer', validate="one_to_one")
 
         cols = ['DATE', 'TIME_GROUP', 'CITY', 'AIR_PRESSURE', 'AIR_TEMPERATURE', 'HUMIDITY', 'RAINFALL', 'SNOWFALL']
         merged = merged[cols]
 
-        return merged[merged['DATE'].apply(lambda x: x.year) == 2019].dropna().sort_values(by=['DATE', 'TIME_GROUP', 'CITY'])
+        return merged[merged['DATE'].apply(lambda x: x.year) == 2019].sort_values(by=['DATE', 'TIME_GROUP', 'CITY'])
 
     ''' **----------------------------------------- 시간별로 합치기 -----------------------------------------** '''
     def time_group(self, df):
@@ -51,8 +51,7 @@ class weather:
         df['DATE'] = df['TIME'].dt.date
         df['TIME_GROUP'] = pd.cut(df['TIME'].dt.hour, bins=bins, labels=labels, right=True)
         df.drop(columns=['TIME'], inplace=True)
-        df = df.groupby(['DATE', 'TIME_GROUP', 'LAT', 'LNG'], as_index=False).mean().reset_index(drop=True)
-        return df.dropna()
+        return df.groupby(['DATE', 'TIME_GROUP', 'LAT', 'LNG'], as_index=False).mean().reset_index(drop=True)
 
     ''' **----------------------------------------- 가까운 도시 찾기 -----------------------------------------** '''
     def near_city(self, df):
@@ -66,7 +65,7 @@ class weather:
         city = pd.read_csv(root.get_path('city'))
         city['POINT'] = city['POINT'].apply(lambda x: wkt.loads(x))
 
-        temp = []
+        temp = []  # 결과를 저장할 리스트 초기화
 
         for district, group in df.groupby('DISTRICT'):
             selected = city[city['DISTRICT'] == district]
@@ -80,9 +79,10 @@ class weather:
             new_point = np.array([[point.x, point.y] for point in group['geometry']])
             group['CITY'] = knn.predict(new_point)
             group.drop(columns=['geometry', 'DISTRICT', 'COUNTRY_CODE'], inplace=True)
+            group = group.groupby(['DATE', 'TIME_GROUP', 'CITY'], as_index=False).mean().reset_index(drop=True)
             temp.append(group)
-        df = pd.concat(temp).groupby(['DATE', 'TIME_GROUP', 'CITY'], as_index=False).mean().reset_index(drop=True)
-        return df.dropna()
+
+        return pd.concat(temp).dropna()
 
     ''' ----------------------------------------- 기압, 온도, 습도, 풍속, 바람 방향(북쪽 기준 각도) ----------------------------------------- '''
 
@@ -102,14 +102,14 @@ class weather:
             data['TIME'] = pd.to_datetime(data['TIME'])
             data = data.astype({'LAT': 'float32', 'LNG': 'float32'})
             data = self.time_group(data)
+            data = self.near_city(data)
 
             if not concat_data.empty:
                 concat_data = pd.concat([concat_data, data])
             else:
                 concat_data = data
 
-        concat_data = self.near_city(concat_data)
-        return concat_data[['DATE', 'TIME_GROUP', 'CITY', 'AIR_PRESSURE', 'AIR_TEMPERATURE', 'HUMIDITY']].dropna()
+        return concat_data[['DATE', 'TIME_GROUP', 'CITY', 'AIR_PRESSURE', 'AIR_TEMPERATURE', 'HUMIDITY']]
 
     ''' ----------------------------------------- 강수량, 강설량 ----------------------------------------- '''
 
@@ -123,20 +123,20 @@ class weather:
             for file in files:
                 print(file)
                 df = self.__partial_h5_data(path=file, col=col).rename(columns={'time': 'TIME', 'lat': 'LAT', 'lng': 'LNG'})
-                df = self.time_group(df)
-                df = self.near_city(df)
+                df = self.time_group(df).dropna()
                 dataframe = pd.concat([dataframe, df], ignore_index=True)
             dataframes.append(dataframe)
 
         merged_df = None
 
         for df in dataframes:
-            print(df.columns)
-            df = df.groupby(['DATE', 'TIME_GROUP', 'CITY'], as_index=False).mean().reset_index(drop=True)
+            df = df.groupby(['DATE', 'TIME_GROUP', 'LAT', 'LNG'], as_index=False).mean().reset_index(drop=True)
             if merged_df is None:
                 merged_df = df
             else:
-                merged_df = pd.merge(merged_df, df, on=['DATE', 'TIME_GROUP', 'CITY'], how='inner', validate="one_to_one").dropna()
+                merged_df = pd.merge(merged_df, df, on=['DATE', 'TIME_GROUP', 'LAT', 'LNG'], how='outer', validate="one_to_one")
+
+        merged_df = self.near_city(merged_df).groupby(['DATE', 'TIME_GROUP', 'CITY'], as_index=False).mean().reset_index(drop=True)
 
         merged_df.rename(columns={'Rainf': 'RAINFALL', 'Snowf': 'SNOWFALL'}, inplace=True)
 
@@ -158,6 +158,7 @@ class weather:
         df = select.to_dataframe().reset_index(drop=True).rename(columns={'lon': 'lng'})
         df = df.astype({'lat': 'float32', 'lng': 'float32'})
         df['time'] = pd.to_datetime(df['time'], unit='s').dt.tz_localize('UTC')
+        df = df[df['time'].dt.year == 2019]
 
         return df.groupby(['time', 'lat', 'lng'], as_index=False).mean().reset_index(drop=True)
 
