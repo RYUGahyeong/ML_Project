@@ -1,7 +1,7 @@
 import os
 import sys
 
-root =  os.path.dirname(os.path.abspath(__file__).replace('\\', '/'))
+root = os.path.dirname(os.path.abspath(__file__).replace('\\', '/'))
 
 # 모듈 경로 추가
 package_path = ['/weather', '/weather/ml_model', '/weather/visual_insight', '/weather/preprocess']
@@ -49,15 +49,13 @@ path = {
     "h5py_wind_pattern": "/data/h5py/wind/Wind",
 
     # 모델 실행파일 저장경로
-    "time_model": "/weather/model/time_model.joblib",
-    "scaler": "/weather/model/scale.joblib",
+    "time_model": "/model/time_model.joblib",
+    "scaler": "/model/scale.joblib",
 
-    "recommend": "/weather/model/recommend.csv"
+    "recommend": "/model/recommend.csv"
 
 }
 
-def get_path(key):
-    if key == '':
-        return root
 
+def get_path(key):
     return root + path[key]
