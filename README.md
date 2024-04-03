@@ -160,6 +160,30 @@
 ```
 <br /><br />
 
+## Install
+```shell
+conda install jupyter --yes
+conda install folium --yes
+conda install xgboost --yes
+conda install numpy --yes
+conda install seaborn --yes
+conda install matplotlib --yes
+conda install bokeh --yes
+conda install pandas --yes
+conda install geopandas --yes
+conda install shapely --yes
+conda install scikit-learn --yes
+conda install requests --yes
+conda install xarray --yes
+conda install h5py --yes
+conda install lightgbm --yes
+conda install tslearn --yes
+conda install gensim --yes
+conda install -c conda-forge tslearn --yes
+conda install netCDF4 --yes
+```
+<br /><br />
+
 ## 📝 데이터 출처
 
 - [장르 분류를 위한 음악 특성 데이터](https://www.kaggle.com/datasets/joebeachcapital/30000-spotify-songs)
