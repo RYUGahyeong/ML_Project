@@ -60,8 +60,9 @@
 ```angular2html 
 |   .gitignore
 |   config.json
-|   genre.ipynb
-|   weather.ipynb
+|   step1_genre_classifier.ipynb
+|   step2_kaggle_weather_eda_and_recollect.ipynb
+|   step3_today_recommend.ipynb
 |   root.py
 |
 +---weather
@@ -70,17 +71,14 @@
 |   |       scale.joblib
 |   |       time_model.joblib
 |   |
-|   +---preprocess
-|   |   |   cleaned_data_preprocess.py
-|   |   |   original_data_cleaning.py
-|   |   |   save_cleaned_data.py
-|   |
-|   |---visual_insight
+|   +---module
+|   |   |   data_preprocess.py
 |   |   |   eda.py
 |   |
 \---data
     |   thirty_thousand_spotify_songs.csv
     |   weather_spotify_songs.csv
+    |   kaggle_weather_with_genre.csv
     |   
     +---cleaned
     |       CITY.csv
@@ -88,7 +86,6 @@
     |       ERD.drawio.png
     |       GENRE_STREAMS_BY_COUNTRY.csv
     |       LAST_FM.csv
-    |       Readme.md
     |       STATE.csv
     |       WEATHER.csv
     |       
