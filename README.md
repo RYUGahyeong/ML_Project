@@ -160,7 +160,7 @@
 ```
 <br /><br />
 
-## Install
+## 📑 Install
 ```shell
 conda install jupyter --yes
 conda install folium --yes
