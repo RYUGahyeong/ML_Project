@@ -1,4 +1,5 @@
 .vscode
-.idea!/data/h5py/
+.idea
+!/data/h5py/
 !/data/original/weather_csv/
 !/data/original/weather_nc/
