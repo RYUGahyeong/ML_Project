@@ -43,10 +43,10 @@
 ## 📘 각 모델에서 사용된 데이터 설명
 > #### 장르 분류 모델
 - 음악 특성 데이터 : 3만 곡의 장르, 음악 특성
-- 1년 간 수집된 음악 청취수 및 음악 특성 데이터 : 수집된 날, 수집된 유럽 국가, 음악 특성, 청취수 
+- 캐글 날씨 데이터 : 수집된 날, 수집된 유럽 국가, 음악 특성, 청취수 
 
 > #### 장르 추천
-- 장르 분류 모델로 국가별 장르 청취수
+- 장르 분류 모델로 얻은 국가별 장르 청취수
 - 위치 기반 날씨 데이터
 - 행정 구역, 도시 등 지리 데이터
 - 각 국가의 상위 100개 음악 태그
@@ -60,8 +60,9 @@
 ```angular2html 
 |   .gitignore
 |   config.json
-|   genre.ipynb
-|   weather.ipynb
+|   step1_genre_classifier.ipynb
+|   step2_kaggle_weather_eda_and_recollect.ipynb
+|   step3_today_recommend.ipynb
 |   root.py
 |
 +---weather
@@ -70,17 +71,14 @@
 |   |       scale.joblib
 |   |       time_model.joblib
 |   |
-|   +---preprocess
-|   |   |   cleaned_data_preprocess.py
-|   |   |   original_data_cleaning.py
-|   |   |   save_cleaned_data.py
-|   |
-|   |---visual_insight
+|   +---module
+|   |   |   data_preprocess.py
 |   |   |   eda.py
 |   |
 \---data
     |   thirty_thousand_spotify_songs.csv
     |   weather_spotify_songs.csv
+    |   kaggle_weather_with_genre.csv
     |   
     +---cleaned
     |       CITY.csv
@@ -88,7 +86,6 @@
     |       ERD.drawio.png
     |       GENRE_STREAMS_BY_COUNTRY.csv
     |       LAST_FM.csv
-    |       Readme.md
     |       STATE.csv
     |       WEATHER.csv
     |       
@@ -160,6 +157,30 @@
             |       
             \---wind
                     Wind_WFDE5_CRU_201901_v2.1.nc ~ Wind_WFDE5_CRU_201912_v2.1.nc
+```
+<br /><br />
+
+## 📑 Install
+```shell
+conda install jupyter --yes
+conda install folium --yes
+conda install xgboost --yes
+conda install numpy --yes
+conda install seaborn --yes
+conda install matplotlib --yes
+conda install bokeh --yes
+conda install pandas --yes
+conda install geopandas --yes
+conda install shapely --yes
+conda install scikit-learn --yes
+conda install requests --yes
+conda install xarray --yes
+conda install h5py --yes
+conda install lightgbm --yes
+conda install tslearn --yes
+conda install gensim --yes
+conda install -c conda-forge tslearn --yes
+conda install netCDF4 --yes
 ```
 <br /><br />
 

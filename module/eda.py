@@ -70,11 +70,12 @@ def selectable_lines(**kwargs):
     p.yaxis.axis_label = y_label
 
     # 날짜 형식 설정
-    p.xaxis.formatter = DatetimeTickFormatter(
-        days="%Y-%m-%d",
-        months="%Y-%m-%d",
-        years="%Y-%m-%d"
-    )
+    if x == 'date':
+        p.xaxis.formatter = DatetimeTickFormatter(
+            days="%Y-%m-%d",
+            months="%Y-%m-%d",
+            years="%Y-%m-%d"
+        )
 
     # hue 색상 설정
     for i, hue_value in enumerate(hues):
